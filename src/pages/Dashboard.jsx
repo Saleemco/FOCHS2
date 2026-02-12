@@ -1,52 +1,69 @@
 import React from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
-const Dashboard = ({ onBackToLanding }) => {
+const Dashboard = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-lg p-6 flex flex-col">
-        <h2 className="text-2xl font-bold text-indigo-600 mb-8">EduVerse</h2>
-        <nav className="flex-1">
-          <ul className="space-y-2">
-            {['Overview', 'Students', 'Attendance', 'Grades', 'Messages', 'Settings'].map((item) => (
-              <li key={item}>
-                <a href="#" className="block px-4 py-2.5 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
-                  {item}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <button 
-          onClick={onBackToLanding}
-          className="px-4 py-2.5 border-2 border-gray-200 text-gray-700 font-semibold rounded-lg hover:border-indigo-600 hover:text-indigo-600 transition-colors"
-        >
-          ← Back to Home
-        </button>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 p-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Welcome Admin</h1>
-          <div className="text-gray-600">
-            Today: {new Date().toLocaleDateString()}
+    <div className="min-h-screen bg-gray-50">
+      <nav className="bg-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
+                S
+              </div>
+              <span className="ml-2 text-xl font-bold text-gray-900">SRMS</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-600">
+                Welcome, {user?.firstName} {user?.lastName} ({user?.role})
+              </span>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
-            <h3 className="text-gray-600 text-sm mb-2">Total Students</h3>
-            <div className="text-3xl font-bold text-indigo-600">2,847</div>
+      </nav>
+      
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard</h1>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Stats cards */}
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="text-3xl mb-2">👥</div>
+            <div className="text-sm text-gray-600">Total Students</div>
+            <div className="text-2xl font-bold">0</div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
-            <h3 className="text-gray-600 text-sm mb-2">Attendance Rate</h3>
-            <div className="text-3xl font-bold text-emerald-600">94.5%</div>
+          
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="text-3xl mb-2">👩‍🏫</div>
+            <div className="text-sm text-gray-600">Total Teachers</div>
+            <div className="text-2xl font-bold">0</div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
-            <h3 className="text-gray-600 text-sm mb-2">Today's Attendance</h3>
-            <div className="text-3xl font-bold text-amber-600">92%</div>
+          
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="text-3xl mb-2">📅</div>
+            <div className="text-sm text-gray-600">Today's Attendance</div>
+            <div className="text-2xl font-bold">0%</div>
+          </div>
+          
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="text-3xl mb-2">💰</div>
+            <div className="text-sm text-gray-600">Pending Fees</div>
+            <div className="text-2xl font-bold">$0</div>
           </div>
         </div>
       </main>

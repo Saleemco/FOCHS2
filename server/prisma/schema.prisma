@@ -1,0 +1,208 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  firstName     String
+  lastName      String
+  role          String    @default("TEACHER") // ADMIN, PRINCIPAL, TEACHER, PARENT, STUDENT
+  isActive      Boolean   @default(true)
+  lastLogin     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  teacher       Teacher?
+  parent        Parent?
+  student       Student?
+  sentMessages  Message[] @relation("sender")
+  receivedMessages Message[] @relation("receiver")
+  attendanceMarked Attendance[] @relation("markedBy")
+  paymentsCollected Payment[] @relation("collectedBy")
+  announcements  Announcement[] @relation("author")
+}
+
+model Student {
+  id            String    @id @default(cuid())
+  firstName     String
+  lastName      String
+  dateOfBirth   DateTime?
+  studentId     String    @unique
+  grade         Int?
+  className     String?
+  emergencyContactName  String?
+  emergencyContactPhone String?
+  allergies     String?
+  medicalNotes  String?
+  
+  userId        String?   @unique
+  user          User?     @relation(fields: [userId], references: [id])
+  
+  attendances   Attendance[]
+  grades        Grade[]
+  payments      Payment[]
+  parentGuardians ParentStudent[]
+  classes       ClassStudent[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Teacher {
+  id            String    @id @default(cuid())
+  employeeId    String    @unique
+  firstName     String
+  lastName      String
+  department    String?
+  
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id])
+  
+  classes       Class[]
+  grades        Grade[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Parent {
+  id            String    @id @default(cuid())
+  firstName     String
+  lastName      String
+  phone         String?
+  
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id])
+  
+  students      ParentStudent[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ParentStudent {
+  parentId      String
+  parent        Parent    @relation(fields: [parentId], references: [id])
+  studentId     String
+  student       Student   @relation(fields: [studentId], references: [id])
+  relationship  String?   // Mother, Father, Guardian, etc.
+  
+  @@id([parentId, studentId])
+}
+
+model Class {
+  id            String    @id @default(cuid())
+  name          String
+  grade         Int?
+  section       String?
+  academicYear  String
+  
+  teacherId     String
+  teacher       Teacher   @relation(fields: [teacherId], references: [id])
+  
+  students      ClassStudent[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ClassStudent {
+  classId       String
+  class         Class     @relation(fields: [classId], references: [id])
+  studentId     String
+  student       Student   @relation(fields: [studentId], references: [id])
+  
+  @@id([classId, studentId])
+}
+
+model Attendance {
+  id            String    @id @default(cuid())
+  date          DateTime  @default(now())
+  status        String    @default("PRESENT") // PRESENT, ABSENT, LATE, EXCUSED, HOLIDAY
+  notes         String?
+  
+  studentId     String
+  student       Student   @relation(fields: [studentId], references: [id])
+  markedById    String
+  markedBy      User      @relation("markedBy", fields: [markedById], references: [id])
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([studentId, date])
+}
+
+model Grade {
+  id            String    @id @default(cuid())
+  subject       String
+  assignment    String
+  score         Float
+  maxScore      Float
+  term          String
+  academicYear  String
+  comments      String?
+  
+  studentId     String
+  student       Student   @relation(fields: [studentId], references: [id])
+  teacherId     String
+  teacher       Teacher   @relation(fields: [teacherId], references: [id])
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Payment {
+  id            String    @id @default(cuid())
+  amount        Float
+  description   String
+  dueDate       DateTime?
+  paidDate      DateTime?
+  status        String    @default("PENDING") // PENDING, PAID, OVERDUE, CANCELLED, REFUNDED
+  transactionId String?
+  
+  studentId     String
+  student       Student   @relation(fields: [studentId], references: [id])
+  collectedById String?
+  collectedBy   User?     @relation("collectedBy", fields: [collectedById], references: [id])
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Message {
+  id            String    @id @default(cuid())
+  subject       String
+  content       String
+  isRead        Boolean   @default(false)
+  readAt        DateTime?
+  
+  senderId      String
+  sender        User      @relation("sender", fields: [senderId], references: [id])
+  receiverId    String
+  receiver      User      @relation("receiver", fields: [receiverId], references: [id])
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Announcement {
+  id            String    @id @default(cuid())
+  title         String
+  content       String
+  audience      String    @default("ALL") // ALL, TEACHERS_ONLY, PARENTS_ONLY, STUDENTS_ONLY, STAFF_ONLY
+  
+  authorId      String
+  author        User      @relation("author", fields: [authorId], references: [id])
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}

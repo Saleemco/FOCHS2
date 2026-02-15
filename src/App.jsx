@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import LandingPage from './pages/LandingPage'; // 👈 IMPORT YOUR LANDING PAGE
 
 
 // Temporary placeholder for pages not built yet
@@ -26,6 +27,7 @@ function App() {
           
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<LandingPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/students" element={<ComingSoon />} />
             <Route path="/attendance" element={<ComingSoon />} />

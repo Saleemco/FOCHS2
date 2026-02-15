@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 
+
 // Temporary placeholder for pages not built yet
 const ComingSoon = () => (
   <div className="min-h-screen flex items-center justify-center bg-gray-50">

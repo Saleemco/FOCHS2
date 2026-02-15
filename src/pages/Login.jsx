@@ -7,7 +7,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -42,13 +42,13 @@ const Login = () => {
             Your School Management System
           </p>
         </div>
-        
+
         {error && (
           <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
             <p className="text-red-700">{error}</p>
           </div>
         )}
-        
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
@@ -67,7 +67,7 @@ const Login = () => {
                 placeholder="admin@srms.com"
               />
             </div>
-            
+
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
@@ -125,11 +125,8 @@ const Login = () => {
               )}
             </button>
           </div>
-          
-          <div className="text-center text-sm text-gray-600">
-            <span>Demo credentials: </span>
-            <span className="font-mono text-xs bg-gray-100 p-1 rounded">admin@srms.com / admin123</span>
-          </div>
+
+         
         </form>
       </div>
     </div>

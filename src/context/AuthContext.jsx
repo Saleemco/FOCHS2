@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../utils/axios'; // 👈 IMPORT YOUR CONFIGURED AXIOS INSTANCE
 
 const AuthContext = createContext({});
 
@@ -10,12 +10,10 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Set axios default base URL
-  axios.defaults.baseURL = 'http://localhost:5000/api';
-
   // Add token to axios headers
   const setAuthToken = (token) => {
     if (token) {
+      // Set token on the imported axios instance, not the default
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       localStorage.setItem('token', token);
     } else {

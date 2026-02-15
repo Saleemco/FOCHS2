@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Link } from 'react-router-dom';
 
 const LandingPage = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -139,15 +140,20 @@ const LandingPage = () => {
             </nav>
 
             <div className="flex items-center gap-4">
-              <a href="#" className="text-gray-700 hover:text-indigo-600 font-medium hidden sm:block transition-colors">
+              <Link 
+                to="/login" 
+                className="text-gray-700 hover:text-indigo-600 font-medium hidden sm:block transition-colors"
+              >
                 Login
-              </a>
-              <button className="relative group">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-300"></div>
-                <div className="relative px-6 py-2.5 bg-white rounded-lg font-semibold text-indigo-600 hover:text-white transition-colors duration-300 group-hover:bg-transparent">
-                  Get Started
-                </div>
-              </button>
+              </Link>
+              <Link to="/login">
+                <button className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-300"></div>
+                  <div className="relative px-6 py-2.5 bg-white rounded-lg font-semibold text-indigo-600 hover:text-white transition-colors duration-300 group-hover:bg-transparent">
+                    Get Started
+                  </div>
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -207,18 +213,22 @@ const LandingPage = () => {
                 className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
                 style={{ animation: "slideInLeft 0.8s ease-out 0.8s both" }}
               >
-                <button className="group relative px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold text-lg overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300">
-                  <span className="relative z-10 flex items-center gap-2">
-                    Start Free Trial 
-                    <span className="transform transition-transform group-hover:translate-x-1">→</span>
-                  </span>
-                </button>
-                <button className="group px-8 py-4 bg-white border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 rounded-xl font-semibold text-lg flex items-center justify-center gap-2 transition-all duration-300 hover:shadow-lg">
-                  <span className="flex items-center justify-center w-6 h-6 bg-indigo-600 rounded-full text-white group-hover:scale-110 transition-transform">
-                    ▶
-                  </span>
-                  See it in action — 15 min demo
-                </button>
+                <Link to="/login">
+                  <button className="group relative px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold text-lg overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300">
+                    <span className="relative z-10 flex items-center gap-2">
+                      Start Free Trial 
+                      <span className="transform transition-transform group-hover:translate-x-1">→</span>
+                    </span>
+                  </button>
+                </Link>
+                <Link to="/login">
+                  <button className="group px-8 py-4 bg-white border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 rounded-xl font-semibold text-lg flex items-center justify-center gap-2 transition-all duration-300 hover:shadow-lg">
+                    <span className="flex items-center justify-center w-6 h-6 bg-indigo-600 rounded-full text-white group-hover:scale-110 transition-transform">
+                      ▶
+                    </span>
+                    See it in action — 15 min demo
+                  </button>
+                </Link>
               </div>
               <p className="text-sm text-gray-500 mt-4 italic">
                 No sales pitch. Just your school, your data, and 15 minutes.
@@ -597,12 +607,16 @@ const LandingPage = () => {
               No implementation team. No 6-month rollout. Just you, your data, and 15 minutes.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="group px-10 py-5 bg-white text-indigo-600 rounded-xl font-bold text-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2">
-                📅 See it in action — 15 min demo
-              </button>
-              <button className="px-10 py-5 bg-transparent border-2 border-white text-white rounded-xl font-bold text-lg hover:bg-white/10 transition-all duration-300">
-                Start free trial
-              </button>
+              <Link to="/login">
+                <button className="group px-10 py-5 bg-white text-indigo-600 rounded-xl font-bold text-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2">
+                  📅 See it in action — 15 min demo
+                </button>
+              </Link>
+              <Link to="/login">
+                <button className="px-10 py-5 bg-transparent border-2 border-white text-white rounded-xl font-bold text-lg hover:bg-white/10 transition-all duration-300">
+                  Start free trial
+                </button>
+              </Link>
             </div>
             <p className="text-white/80 mt-6 text-sm">
               No credit card required • 14-day trial • Real school. Real data. No sales pitch.

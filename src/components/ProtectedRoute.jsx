@@ -17,7 +17,15 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
+  }
+
+  // Role-based redirect for root protected route
+  if (allowedRoles.length === 0) {
+    // If user is admin and trying to access a non-admin route, send them to admin
+    if (user?.role === 'ADMIN' || user?.role === 'PRINCIPAL') {
+      return <Navigate to="/admin" replace />;
+    }
   }
 
   if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {

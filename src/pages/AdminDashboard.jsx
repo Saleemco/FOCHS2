@@ -38,14 +38,14 @@ const AdminDashboard = () => {
     },
     { 
       title: 'Total Revenue', 
-      value: '$48,574', 
+      value: '#48,574', 
       change: '+8.2%', 
       icon: DollarSign, 
       color: 'from-green-500 to-emerald-600',
       bg: 'bg-green-50'
     },
     { 
-      title: 'Active Courses', 
+      title: 'Active Subjects', 
       value: '156', 
       change: '+3.1%', 
       icon: BookOpen, 

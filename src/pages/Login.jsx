@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
+  
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -18,16 +18,28 @@ const Login = () => {
 
     try {
       await login(email, password);
-      navigate('/dashboard');
+      
+      // Check if it's the admin email
+      if (email === 'admin@srms.com') {
+        navigate('/admin');  // 👈 Send admin to admin dashboard
+      } else {
+        navigate('/dashboard');  // 👈 Regular users to regular dashboard
+      }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to login');
+      setError(err.message || 'Failed to login');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 px-4 sm:px-6 lg:px-8 relative">
+      {/* Back to Home Link */}
+      <Link to="/" className="absolute top-6 left-6 flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition-colors">
+        <span className="text-2xl">←</span>
+        <span>Back to Home</span>
+      </Link>
+      
       <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl">
         <div>
           <div className="flex justify-center">
@@ -42,13 +54,13 @@ const Login = () => {
             Your School Management System
           </p>
         </div>
-
+        
         {error && (
           <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
             <p className="text-red-700">{error}</p>
           </div>
         )}
-
+        
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
@@ -67,7 +79,7 @@ const Login = () => {
                 placeholder="admin@srms.com"
               />
             </div>
-
+            
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
@@ -100,9 +112,9 @@ const Login = () => {
             </div>
 
             <div className="text-sm">
-              <a href="/forgot-password" className="font-medium text-indigo-600 hover:text-indigo-500">
+              <Link to="/forgot-password" className="font-medium text-indigo-600 hover:text-indigo-500">
                 Forgot your password?
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -125,8 +137,11 @@ const Login = () => {
               )}
             </button>
           </div>
-
-         
+          
+          <div className="text-center text-sm text-gray-600">
+            <span>Demo credentials: </span>
+            <span className="font-mono text-xs bg-gray-100 p-1 rounded">admin@srms.com / admin123</span>
+          </div>
         </form>
       </div>
     </div>

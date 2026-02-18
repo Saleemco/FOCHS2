@@ -1,91 +1,80 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from '../utils/axios'; // 👈 IMPORT YOUR CONFIGURED AXIOS INSTANCE
 
 const AuthContext = createContext({});
 
 export const useAuth = () => useContext(AuthContext);
+
+// Mock user for testing - MAKE SURE ROLE IS ADMIN
+const MOCK_USER = {
+  id: '1',
+  email: 'admin@srms.com',
+  firstName: 'Admin',
+  lastName: 'User',
+  role: 'ADMIN',  // ✅ Must be ADMIN to access admin dashboard
+  isActive: true
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Add token to axios headers
-  const setAuthToken = (token) => {
-    if (token) {
-      // Set token on the imported axios instance, not the default
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      localStorage.setItem('token', token);
-    } else {
-      delete axios.defaults.headers.common['Authorization'];
-      localStorage.removeItem('token');
-    }
-  };
-
-  // Login user
+  // Mock login - always succeeds with demo credentials
   const login = async (email, password) => {
     try {
       setError(null);
-      const response = await axios.post('/auth/login', { email, password });
-      const { token, ...userData } = response.data;
       
-      setAuthToken(token);
-      setUser(userData);
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      return response.data;
+      // Check if using demo credentials
+      if (email === 'admin@srms.com' && password === 'admin123') {
+        setUser(MOCK_USER);
+        localStorage.setItem('user', JSON.stringify(MOCK_USER));
+        return MOCK_USER;
+      } else {
+        throw new Error('Invalid credentials');
+      }
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      setError(err.message || 'Login failed');
       throw err;
     }
   };
 
-  // Register user
+  // Mock register
   const register = async (userData) => {
     try {
       setError(null);
-      const response = await axios.post('/auth/register', userData);
-      const { token, ...user } = response.data;
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      setAuthToken(token);
-      setUser(user);
+      const newUser = {
+        id: Date.now().toString(),
+        ...userData,
+        role: userData.role || 'TEACHER'
+      };
       
-      return response.data;
+      setUser(newUser);
+      localStorage.setItem('user', JSON.stringify(newUser));
+      return newUser;
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError(err.message || 'Registration failed');
       throw err;
     }
   };
 
-  // Logout user
+  // Logout
   const logout = () => {
-    setAuthToken(null);
     setUser(null);
+    localStorage.removeItem('user');
   };
 
-  // Load user from token
-  const loadUser = async () => {
-    const token = localStorage.getItem('token');
-    
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
-    setAuthToken(token);
-
-    try {
-      const response = await axios.get('/auth/me');
-      setUser(response.data);
-    } catch (err) {
-      setAuthToken(null);
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Load user from localStorage
   useEffect(() => {
-    loadUser();
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    setLoading(false);
   }, []);
 
   const value = {
